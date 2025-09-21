@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        @keyframes gradientShift { 0%{background-position:0%50%}50%{background-position:100%50%}100%{background-position:0%50%} }
+
+        .login-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header h1 {
+            background: linear-gradient(45deg,#ff6b6b,#4ecdc4,#45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .login-header p { color:#666; font-size:1.1em; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display:block; margin-bottom:5px; font-weight:bold; }
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus { outline:none; border-color:#4ecdc4; }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        .forgot-password { text-align:center; margin-top:15px; }
+        .forgot-password a { color:#ff6b6b; text-decoration:none; font-weight:bold; }
+
+        @media (max-width: 480px) {
+            .login-container { padding: 25px 20px; }
+            .login-header h1 { font-size: 2em; }
+            .form-group input { padding: 12px 15px; font-size: 1em; }
+            .login-btn { padding: 12px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Kirish</h1>
+            <p>Hisobingizga kiring</p>
+        </div>
+
+        {% if messages %}
+            <ul style="color:red; list-style:none; padding:0;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.errors %}
+            <div style="color:red; margin-bottom:15px;">{{ form.errors }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_email">📧 Email manzil</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_password">🔐 Parol</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="login-btn">Kirish</button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="#">Parolni unutdingizmi?</a>
+        </div>
+    </div>
+</body>
+</html>

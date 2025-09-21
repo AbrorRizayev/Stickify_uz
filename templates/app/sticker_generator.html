@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Sticker Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .sticker-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .sticker-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .header-title h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: hue-rotate(0deg); }
+            to { filter: hue-rotate(90deg); }
+        }
+
+        .header-title p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .product-info-section, .sticker-controls-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+            word-break: break-word;
+        }
+
+        .size-options {
+            margin-bottom: 25px;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .size-option {
+            position: relative;
+        }
+
+        .size-option input[type="radio"] {
+            display: none;
+        }
+
+        .size-label {
+            display: block;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .size-option input[type="radio"]:checked + .size-label {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: white;
+            border-color: #4ecdc4;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .size-label:hover {
+            border-color: #4ecdc4;
+            transform: translateY(-2px);
+        }
+
+        .csv-upload-section {
+            margin-bottom: 25px;
+        }
+
+        .upload-area {
+            border: 3px dashed #e1e1e1;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .upload-area:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            color: #4ecdc4;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-info {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid #4ecdc4;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .file-name {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .generate-btn, .download-btn, .print-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            color: white;
+        }
+
+        .print-btn {
+            background: linear-gradient(45deg, #feca57, #ff9ff3);
+            color: white;
+        }
+
+        .generate-btn:hover, .download-btn:hover, .print-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-btn:disabled, .download-btn:disabled, .print-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .sticker-preview {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .preview-area {
+            border: 2px dashed #e1e1e1;
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 20px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-placeholder {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 107, 107, 1);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .product-details {
+                grid-template-columns: 1fr;
+            }
+
+            .size-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Orqaga qaytish</button>
+
+    <div class="sticker-container">
+        <div class="sticker-header">
+            <div class="header-title">
+                <h1>Sticker Generator</h1>
+                <p>Osonlik bilan professional mahsulot stikerlarini yarating</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Product Information Section -->
+            <div class="product-info-section">
+                <h2 class="section-title">Mahsulot malumotlari</h2>
+                <div class="product-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot nomi</span>
+                        <span class="detail-value" id="productName">{{ product.name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot rangi</span>
+                        <span class="detail-value" id="productType">{{ product.color }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot Barcode</span>
+                        <span class="detail-value" id="productBarcode">{{ product.barcode }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot Bendi</span>
+                        <span class="detail-value" id="productPrice">{{ product.brand }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot Materiali</span>
+                        <span class="detail-value" id="productBrand">{{ product.material }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot artikli</span>
+                        <span class="detail-value" id="productSku">{{ product.article }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mahsulot ishlab chiqaruvchi</span>
+                        <span class="detail-value" id="productSku">{{ product.manufacture}} {{ product.region }} {{ product.city }} {{ product.street_and_home }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticker Controls Section -->
+            <div class="sticker-controls-section">
+                <h2 class="section-title">Sticker Configuration</h2>
+
+                <!-- Size Options -->
+                <div class="size-options">
+                    <h3 style="color: #333; margin-bottom: 15px;">Chiqadigan Sticker o'lchamini tanlang</h3>
+                    <div class="size-grid">
+                        <div class="size-option">
+                            <input type="radio" id="size58x40" name="stickerSize" value="58x40" checked>
+                            <label for="size58x40" class="size-label">
+                                <div>58×40mm</div>
+                                <small style="opacity: 0.7;">Standard</small>
+                            </label>
+                        </div>
+                        <div class="size-option">
+                            <input type="radio" id="size70x40" name="stickerSize" value="70x40">
+                            <label for="size70x40" class="size-label">
+                                <div>70×40mm</div>
+                                <small style="opacity: 0.7;">Medium</small>
+                            </label>
+                        </div>
+                        <div class="size-option">
+                            <input type="radio" id="size100x50" name="stickerSize" value="100x50">
+                            <label for="size100x50" class="size-label">
+                                <div>100×50mm</div>
+                                <small style="opacity: 0.7;">Large</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV Upload Section -->
+                <div class="csv-upload-section">
+                    <h3 style="color: #333; margin-bottom: 15px;">CSV File yuklang</h3>
+                    <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">CSV faylingizni yuklash yoki sudrab olib tashlash uchun bosing</div>
+                        <button type="button" class="upload-btn">File Tanlash</button>
+                    </div>
+                    <input type="file" id="csvFile" class="file-input" accept=".csv" onchange="handleFileSelect(event)">
+                    <div class="file-info" id="fileInfo">
+                        <div class="file-name" id="fileName"></div>
+                        <div class="file-size" id="fileSize"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="generate-btn" id="generateBtn" onclick="generateSticker()" disabled>
+                        Sticker yasash
+                    </button>
+                    <button class="download-btn" id="downloadBtn" onclick="downloadSticker()" disabled>
+                        Yuklab olish
+                    </button>
+                    <button class="print-btn" id="printBtn" onclick="printSticker()" disabled>
+                        Print
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticker Preview Section -->
+        <div class="sticker-preview">
+            <h2 class="section-title">Sticker ko'rinishi</h2>
+            <div class="preview-area" id="previewArea">
+                <div class="preview-placeholder">Tayyor bo'lgan sticker shu yerda paydo boladi </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let uploadedFile = null;
+    let generatedStickerBlob = null;
+
+    // === CSRF helper ===
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // === Handle file selection ===
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file && file.type === 'text/csv') {
+            uploadedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+            document.getElementById('fileInfo').style.display = 'block';
+            document.getElementById('generateBtn').disabled = false;
+
+            const uploadArea = document.querySelector('.upload-area');
+            uploadArea.innerHTML = `
+                <div class="upload-icon">✅</div>
+                <div class="upload-text" style="color: #4ecdc4;">File uploaded successfully!</div>
+                <button type="button" class="upload-btn" onclick="document.getElementById('csvFile').click()">Change File</button>
+            `;
+        } else {
+            alert('Please select a valid CSV file.');
+            event.target.value = '';
+        }
+    }
+
+    // === Generate sticker (backend call) ===
+    async function generateSticker() {
+        if (!uploadedFile) {
+            alert('Please upload a CSV file first.');
+            return;
+        }
+
+        const selectedSize = document.querySelector('input[name="stickerSize"]:checked').value;
+
+        const sizeMap = {
+            "58x40": "58x40MM",
+            "70x40": "70x40MM",
+            "100x50": "100x50MM"
+        };
+
+        const stickerType = sizeMap[selectedSize];
+        const generateBtn = document.getElementById('generateBtn');
+        generateBtn.textContent = 'Generating...';
+        generateBtn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append("csv_file", uploadedFile);
+
+            // Injected from Django template
+            const productId = "{{ product.id }}";
+
+            const response = await fetch(`/products/${productId}/stickers/${stickerType}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrftoken
+                },
+                body: formData,
+                credentials: "include"   // send session cookie
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to generate sticker PDF");
+            }
+
+            const blob = await response.blob();
+            generatedStickerBlob = blob;
+
+            document.getElementById('downloadBtn').disabled = false;
+            document.getElementById('printBtn').disabled = false;
+
+            const url = URL.createObjectURL(blob);
+            document.getElementById('previewArea').innerHTML = `
+    <embed src="${url}" type="application/pdf" width="100%" height="600px" style="border:2px solid #4ecdc4; border-radius:10px;" />
+`;
+
+        } catch (error) {
+            console.error(error);
+            alert("Error generating stickers. Please try again.");
+        } finally {
+            generateBtn.textContent = 'Generate Sticker';
+            generateBtn.disabled = false;
+        }
+    }
+
+    // === Download ===
+    function downloadSticker() {
+        if (generatedStickerBlob) {
+            const url = URL.createObjectURL(generatedStickerBlob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `stickers_${Date.now()}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    }
+
+    // === Print ===
+    function printSticker() {
+        if (generatedStickerBlob) {
+            const url = URL.createObjectURL(generatedStickerBlob);
+            const printWindow = window.open(url, "_blank");
+            printWindow.focus();
+            printWindow.print();
+        }
+    }
+
+    // === Back ===
+    function goBack() {
+        window.location.href = "{% url 'category-detail'  product.category.id%}";
+    }
+</script>
+
+
+</body>
+</html>

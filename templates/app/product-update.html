@@ -1,0 +1,722 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .header-title h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: hue-rotate(0deg); }
+            to { filter: hue-rotate(90deg); }
+        }
+
+        .header-title p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .add-product-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .add-product-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-filter-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .filter-select {
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #45b7d1;
+            box-shadow: 0 0 15px rgba(69, 183, 209, 0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .product-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            flex: 1;
+        }
+
+        .product-type {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .detail-label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .barcode {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #666;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .no-products h3 {
+            color: #666;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .no-products p {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+
+
+        /* Edit Form Styles */
+        .edit-form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-title {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input,
+        .form-select {
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .barcode-group {
+            grid-column: 1 / -1;
+        }
+
+        .barcode-input {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding-top: 20px;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #96ceb4, #feca57);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #666, #888);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+            }
+
+            .search-filter-bar {
+                flex-direction: column;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-details {
+                grid-template-columns: 1fr;
+            }
+
+            .product-actions {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .view-btn, .sticker-btn {
+                width: 100%;
+            }
+
+            .edit-form-container {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #ff6b6b;
+        }
+
+        .modal-content p {
+            margin: 5px 0;
+            color: #444;
+        }
+
+        .modal-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="goBack()">← Mahsulotlarga qaytish</button>
+    <div class="dashboard-container">
+
+        <div class="edit-form-container">
+            <h2 class="form-title">Mahsulotni tahrirlash</h2>
+
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Mahsulot nomi<span class="required">*</span></label>
+                        {{ form.name|add_class:"form-input" }}
+                        {% if form.name.errors %} <div class="error">{{ form.name.errors }}</div> {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.color.id_for_label }}" class="form-label">Mahsulot rangi</label>
+                        {{ form.color|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.size.id_for_label }}" class="form-label">Mahsulot o'lchami</label>
+                        {{ form.size|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.brand.id_for_label }}" class="form-label">Mahsulot Brand</label>
+                        {{ form.brand|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.material.id_for_label }}" class="form-label">Mahsulot Material</label>
+                        {{ form.material|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.article.id_for_label }}" class="form-label">Mahsulot Artikle</label>
+                        {{ form.article|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.manufacture.id_for_label }}" class="form-label">Mahsulot ishlab chiqaruvchi</label>
+                        {{ form.manufacture|add_class:"form-input" }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.region.id_for_label }}" class="form-label">Viloyat</label>
+                        {{ form.region|add_class:"form-input" }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.city.id_for_label }}" class="form-label">Shahar</label>
+                        {{ form.city|add_class:"form-input" }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.street_and_home.id_for_label }}" class="form-label">Ko'cha va uy</label>
+                        {{ form.street_and_home|add_class:"form-input" }}
+                    </div>
+
+                    <div class="form-group barcode-group">
+                        <label for="{{ form.barcode.id_for_label }}" class="form-label">Barcode</label>
+                        {{ form.barcode|add_class:"form-input barcode-input" }}
+                        {% if form.barcode.errors %} <div class="error">{{ form.barcode.errors }}</div> {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Mahsulotni yangilash</button>
+                    <a href="{% url 'category-detail' category.id%}" class="btn btn-secondary">Orqaga</a>
+                    <button type="button" class="btn btn-danger" onclick="openDeleteModal()">O'chirish</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+    <div class="modal-content">
+            <h3>Confirm Delete</h3>
+            <p><strong>Name:</strong> {{ form.instance.name }}</p>
+            <p><strong>Brand:</strong> {{ form.instance.brand }}</p>
+            <p><strong>Article:</strong> {{ form.instance.article }}</p>
+            <p><strong>Barcode:</strong> {{ form.instance.barcode }}</p>
+
+            <div class="modal-actions">
+                <form method="POST" action="{% url 'product-delete' form.instance.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Ha, o‘chir</button>
+                </form>
+                <button type="button" onclick="closeModal()" class="btn btn-secondary">Bekor qilish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function confirmDelete() {
+        if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+            // Django delete URL’iga yuboriladi
+            window.location.href = "{% url 'product-delete' form.instance.id %}";
+        }
+    }
+    </script>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                // Redirect to delete endpoint or submit delete form
+                // You can modify this to match your Django URL pattern
+                window.location.href = 'delete/';
+            }
+        }
+
+        // Add form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#ff6b6b';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e1e1e1';
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+
+        // Reset border color on input
+        document.querySelectorAll('.form-input, .form-select').forEach(input => {
+            input.addEventListener('input', function() {
+                this.style.borderColor = '#e1e1e1';
+            });
+        });
+    </script>
+
+    <script>
+        function openDeleteModal() {
+            document.getElementById("deleteModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+
+    function goBack() {
+            window.location.href = "{% url 'category-detail' category.id%}";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Product Manager Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: hue-rotate(0deg); }
+            to { filter: hue-rotate(90deg); }
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 107, 107, 1);
+            transform: scale(1.05);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .barcode-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .barcode-input {
+            flex: 1;
+        }
+
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .required {
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .barcode-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+
+        }
+
+        .success-message {
+            background: linear-gradient(45deg, #96ceb4, #4ecdc4);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Stickify </h1>
+            <p>Yangi mahsulot qo'shish</p>
+        </div>
+    <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+
+        <div class="form-container">
+            <div class="success-message" id="successMessage">
+                Mahsulot muvaffaqiyatli qo'shildi! 🎉
+            </div>
+
+            <form id="productForm" method="post" action="{% url 'products-add' category_id %}">
+            {% csrf_token %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="success-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Название продукта<span class="required">*</span></label>
+                    {{ form.name }}
+                    {% if form.name.errors %} <div class="error">{{ form.name.errors }}</div> {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.color.id_for_label }}">Цвет<span class="required">*</span></label>
+                    {{ form.color }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.size.id_for_label }}">Размер<span class="required">*</span></label>
+                    {{ form.size }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.brand.id_for_label }}">Бренд<span class="required">*</span></label>
+                    {{ form.brand }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.material.id_for_label }}">Материал<span class="required">*</span></label>
+                    {{ form.material }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.article.id_for_label }}">Artikul<span class="required">*</span></label>
+                    {{ form.article }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacture.id_for_label }}">Производитель<span class="required">*</span></label>
+                    {{ form.manufacture }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacture.id_for_label }}">Viloyat<span class="required">*</span></label>
+                    {{ form.region }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacture.id_for_label }}">Shahar<span class="required">*</span></label>
+                    {{ form.city }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.manufacture.id_for_label }}">Manzil<span class="required">*</span></label>
+                    {{ form.street_and_home }}
+                </div>
+
+                <div class="barcode-group">
+                    <div class="form-group barcode-input">
+                        <label for="{{ form.barcode.id_for_label }}">Barcode <span class="required">*</span></label>
+                        {{ form.barcode }}
+                        {% if form.barcode.errors %} <div class="error">{{ form.barcode.errors }}</div> {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Product qo'shish</button>
+        </form>
+        </div>
+    </div>
+
+    <script>
+        function generateBarcode() {
+            const barcode = Math.random().toString().substr(2, 12);
+            document.getElementById('barcode').value = barcode;
+        }
+
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+
+            // Reset form after a short delay
+            setTimeout(() => {
+                this.reset();
+                successMessage.style.display = 'none';
+            }, 2000);
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            element.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+        function goBack() {
+            window.location.href = "{% url 'category-detail' category.id %}";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Kategoriyalar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title { flex: 1; min-width: 300px; }
+        .header-title h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(90deg); } }
+
+        .header-title p { color: #666; font-size: 1.1em; }
+
+        .header-stats { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+
+        .stat-card {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-number { font-size: 2em; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.9em; opacity: 0.9; }
+
+        .add-category-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .add-category-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+
+        .search-filter-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+        }
+        .search-box { flex: 1; min-width: 250px; position: relative; }
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .categories-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: 0.2s ease;
+        }
+        .category-row:hover {
+            background: #f9f9f9;
+            transform: translateY(-2px);
+        }
+
+        .category-row-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .category-icon {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+        .category-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        .category-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .category-footer {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .category-date {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .category-actions .btn {
+            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            position: fixed; top: 20px; right: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white; border: none; padding: 12px 20px;
+            border-radius: 25px; font-weight: bold;
+            cursor: pointer; transition: all 0.3s ease; z-index: 1000;
+        }
+        .logout-btn:hover { background: rgba(255, 107, 107, 1); transform: scale(1.05); }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(3px);
+            justify-content: center; align-items: center;
+            z-index: 2000;
+        }
+        .modal-box {
+            background: #fff; padding: 25px 30px; border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            width: 400px; max-width: 90%; animation: fadeIn 0.3s ease;
+        }
+        .modal-box h2 { margin-bottom: 20px; font-size: 1.4em; text-align: center; }
+        .modal-input {
+            width: 100%; padding: 12px; margin-bottom: 20px;
+            border: 2px solid #ddd; border-radius: 10px; font-size: 1em;
+        }
+        .modal-actions { display: flex; justify-content: space-between; gap: 10px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-primary { background: linear-gradient(45deg, #4ecdc4, #45b7d1); color: white; }
+        .btn-danger { background: #ff6b6b; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        @keyframes fadeIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group small {
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .no-categories {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Logout Form -->
+<form id="logoutForm" method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn">🚪 Chiqish</button>
+</form>
+
+<div class="dashboard-container">
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="dashboard-header">
+        <div class="header-title">
+            <h1>Dashboard</h1>
+            <p>{{ email }} - Mening kategoriyalarim</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-card">
+                <span class="stat-number" id="categoryCount">{{ categories.count }}</span>
+                <span class="stat-label">Jami kategoriya</span>
+            </div>
+        </div>
+        <button class="add-category-btn" onclick="openAddCategoryModal()">➕ Kategoriya qo'shish</button>
+    </div>
+
+    <div class="search-filter-bar">
+        <div class="search-box">
+            <form method="get" id="searchForm">
+                <input type="text"
+                       name="search"
+                       id="searchInput"
+                       placeholder="🔍 Kategoriya nomi bo'yicha qidirish..."
+                       value="{{ request.GET.search|default:'' }}">
+            </form>
+        </div>
+    </div>
+
+    <div class="categories-grid" id="categoriesGrid">
+        {% for category in categories %}
+        <div class="category-row">
+            <div class="category-icon">📁</div>
+
+            <div class="category-info">
+                <a href="{% url 'category-detail' category.id %}" class="category-row-link">
+                    <div class="category-name">{{ category.name }}</div>
+                    <div class="category-description">
+                        Yaratilgan vaqt: {{ category.created_at|date:"d.m.Y H:i" }}
+                    </div>
+                </a>
+            </div>
+
+            <div class="category-footer">
+                <div class="category-date">{{ category.created_at|date:"d.m.Y" }}</div>
+                <div class="category-actions">
+                    <button type="button"
+                            class="btn btn-primary edit-btn"
+                            data-id="{{ category.id }}"
+                            data-name="{{ category.name|escapejs }}">
+                        ✏️Tahrirlash
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger delete-btn"
+                            data-id="{{ category.id }}"
+                            data-name="{{ category.name|escapejs }}">
+                        🗑️O'chirish
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-categories">
+            <div class="category-icon">📂</div>
+            <h3>Hech qanday kategoriya topilmadi</h3>
+            <p>Yangi kategoriya qo'shish uchun yuqoridagi tugmani bosing</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Yangi kategoriya qo'shish</h2>
+        <form method="post" action="{% url 'category-add' %}" id="addCategoryForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">Kategoriya nomi</label>
+                <input type="text" id="id_name" name="name" placeholder="Kategoriya nomi" required class="modal-input" maxlength="255">
+                <small id="category-error" style="color:red; display:none;">
+                    Bunday kategoriya allaqachon yaratilgan!
+                </small>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" id="submit-btn" class="btn btn-primary">Qo'shish</button>
+                <button type="button" class="btn btn-danger" onclick="closeAddCategoryModal()">Bekor qilish</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Kategoriyani tahrirlash</h2>
+        <form method="post" id="editCategoryForm">
+            {% csrf_token %}
+            <input type="hidden" id="edit_category_id" name="id">
+            <div class="form-group">
+                <label for="edit_name">Kategoriya nomi</label>
+                <input type="text" id="edit_name" name="name" required class="modal-input" maxlength="255">
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+                <button type="button" class="btn btn-danger" onclick="closeEditCategoryModal()">Bekor qilish</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Category Modal -->
+<div id="deleteCategoryModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Kategoriyani o'chirish</h2>
+        <p><b id="delete_category_name"></b> nomli kategoriyani o'chirishni istaysizmi?</p>
+        <form method="post" id="deleteCategoryForm">
+            {% csrf_token %}
+            <input type="hidden" id="delete_category_id" name="id">
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteCategoryModal()">Bekor qilish</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// ===== GLOBAL MODAL FUNCTIONS =====
+function openAddCategoryModal() {
+    document.getElementById("addCategoryModal").style.display = "flex";
+    document.getElementById("id_name").focus();
+}
+
+function closeAddCategoryModal() {
+    document.getElementById("addCategoryModal").style.display = "none";
+    document.getElementById("id_name").value = "";
+    document.getElementById("category-error").style.display = "none";
+    document.getElementById("submit-btn").disabled = false;
+}
+
+function openEditCategoryModal(id, name) {
+    document.getElementById("editCategoryModal").style.display = "flex";
+    document.getElementById("edit_category_id").value = id;
+    document.getElementById("edit_name").value = name;
+    document.getElementById("editCategoryForm").action = `/categories/${id}/update/`;
+    document.getElementById("edit_name").focus();
+}
+
+function closeEditCategoryModal() {
+    document.getElementById("editCategoryModal").style.display = "none";
+}
+
+function openDeleteCategoryModal(id, name) {
+    document.getElementById("deleteCategoryModal").style.display = "flex";
+    document.getElementById("delete_category_id").value = id;
+    document.getElementById("delete_category_name").innerText = name;
+    document.getElementById("deleteCategoryForm").action = `/categories/${id}/delete/`;
+}
+
+function closeDeleteCategoryModal() {
+    document.getElementById("deleteCategoryModal").style.display = "none";
+}
+
+// ===== UTILITY FUNCTIONS =====
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    }
+}
+
+function updateCategoryCount() {
+    const visibleCategories = document.querySelectorAll('.category-row:not([style*="display: none"])').length;
+    document.getElementById('categoryCount').textContent = visibleCategories;
+}
+
+// ===== DOM CONTENT LOADED =====
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ===== CATEGORY NAME VALIDATION =====
+    const input = document.getElementById("id_name");
+    const errorMsg = document.getElementById("category-error");
+    const submitBtn = document.getElementById("submit-btn");
+
+    async function checkCategory(name) {
+        if (!name || name.length < 2) {
+            errorMsg.style.display = "none";
+            submitBtn.disabled = false;
+            return false;
+        }
+
+        try {
+            const response = await fetch(`/check-category/?name=${encodeURIComponent(name)}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.exists) {
+                    errorMsg.style.display = "block";
+                    submitBtn.disabled = true;
+                    return true;
+                } else {
+                    errorMsg.style.display = "none";
+                    submitBtn.disabled = false;
+                    return false;
+                }
+            } else {
+                console.warn('Category check failed, proceeding anyway');
+                errorMsg.style.display = "none";
+                submitBtn.disabled = false;
+                return false;
+            }
+        } catch (err) {
+            console.error("Error checking category:", err);
+            // Don't block submission on network errors
+            errorMsg.style.display = "none";
+            submitBtn.disabled = false;
+            return false;
+        }
+    }
+
+    if (input) {
+        input.addEventListener("input", debounce(() => {
+            checkCategory(input.value.trim());
+        }, 300));
+    }
+
+    // ===== BUTTON EVENT LISTENERS =====
+    // Edit button listeners
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            openEditCategoryModal(id, name);
+        });
+    });
+
+    // Delete button listeners
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            openDeleteCategoryModal(id, name);
+        });
+    });
+
+    // ===== SEARCH FUNCTIONALITY =====
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        // Auto-submit search form after user stops typing
+        searchInput.addEventListener('input', debounce(function() {
+            document.getElementById('searchForm').submit();
+        }, 500));
+    }
+
+    // ===== CLIENT-SIDE SEARCH FILTER =====
+    function filterCategoriesClientSide() {
+        const q = searchInput.value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.category-row');
+
+        cards.forEach(card => {
+            if (card.querySelector('.no-categories')) return; // Skip "no categories" message
+
+            const name = card.querySelector('.category-name')?.innerText.toLowerCase() || '';
+            const desc = card.querySelector('.category-description')?.innerText.toLowerCase() || '';
+            const match = q === '' || name.includes(q) || desc.includes(q);
+            card.style.display = match ? '' : 'none';
+        });
+
+        updateCategoryCount();
+    }
+
+    // For client-side filtering (optional, comment out if you prefer server-side only)
+    // searchInput.addEventListener('input', debounce(filterCategoriesClientSide, 150));
+
+    // ===== MODAL INTERACTIONS =====
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+    });
+
+    // ===== FORM VALIDATION =====
+    // Add category form validation
+    document.getElementById('addCategoryForm').addEventListener('submit', async function(e) {
+        const name = document.getElementById('id_name').value.trim();
+
+        if (!name) {
+            e.preventDefault();
+            alert('Kategoriya nomini kiriting!');
+            return;
+        }
+
+        if (name.length < 2) {
+            e.preventDefault();
+            alert('Kategoriya nomi kamida 2 ta belgidan iborat bo\'lishi kerak!');
+            return;
+        }
+
+        // Check for duplicates one more time before submission
+        const exists = await checkCategory(name);
+        if (exists) {
+            e.preventDefault();
+            return;
+        }
+    });
+
+    // Edit category form validation
+    document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('edit_name').value.trim();
+
+        if (!name) {
+            e.preventDefault();
+            alert('Kategoriya nomini kiriting!');
+            return;
+        }
+
+        if (name.length < 2) {
+            e.preventDefault();
+            alert('Kategoriya nomi kamida 2 ta belgidan iborat bo\'lishi kerak!');
+            return;
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+mig:
+	python manage.py makemigrations apps
+	python manage.py migrate
+
+

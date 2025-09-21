@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Mahsulotlari</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .header-title h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: hue-rotate(0deg); }
+            to { filter: hue-rotate(90deg); }
+        }
+
+        .header-title p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .add-product-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            animation: gradientShift 4s ease infinite;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .add-product-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-filter-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .filter-select {
+            padding: 15px 20px;
+            border: 3px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #45b7d1;
+            box-shadow: 0 0 15px rgba(69, 183, 209, 0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .product-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            flex: 1;
+        }
+
+        .product-type {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .detail-label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .barcode {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #666;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            background: linear-gradient(45deg, #45b7d1, #96ceb4);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .no-products h3 {
+            color: #666;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .no-products p {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 107, 107, 1);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                justify-content: center;
+            }
+
+            .search-filter-bar {
+                flex-direction: column;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-details {
+                grid-template-columns: 1fr;
+            }
+
+            .product-actions {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .view-btn, .sticker-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-title {
+        margin-bottom: 20px;
+    }
+
+    .header-stats {
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .search-filter-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .product-details {
+        grid-template-columns: 1fr;
+    }
+
+    .product-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .footer-buttons a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .add-product-btn {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .logout-btn {
+        padding: 10px 16px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-header {
+        padding: 20px 15px;
+    }
+
+    .header-title h1 {
+        font-size: 1.8em;
+    }
+
+    .header-title p {
+        font-size: 0.9em;
+    }
+
+    .stat-card {
+        min-width: 100px;
+        padding: 15px 20px;
+        font-size: 0.9em;
+    }
+
+    .search-box input {
+        padding: 12px 15px;
+        font-size: 0.95em;
+    }
+
+    .filter-select {
+        padding: 12px 15px;
+        font-size: 0.95em;
+    }
+
+    .product-card {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .product-name {
+        font-size: 1.2em;
+    }
+
+    .product-type {
+        font-size: 0.75em;
+        padding: 4px 10px;
+    }
+
+    .detail-label {
+        font-size: 0.75em;
+    }
+
+    .detail-value {
+        font-size: 0.85em;
+    }
+
+    .view-btn, .sticker-btn {
+        padding: 8px 0;
+        font-size: 0.85em;
+    }
+}
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Kategoriyalarga qaytish</button>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="header-title">
+                <h1>{{ category.name }}</h1>
+                <p>{{ category.name }} ga tegishli mahsulotlar</p>
+            </div>
+
+            <div class="header-stats">
+                <div class="stat-card">
+                    <span class="stat-number">{{ products.count }}</span>
+                    <span class="stat-label">Jami mahsulot</span>
+                </div>
+            </div>
+
+            <button class="add-product-btn" onclick="window.location.href='{% url "products-add" category.id %}'">
+            ➕ Mahsulot qo'shish
+            </button>
+        </div>
+
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Mahsulot nomi, artikul yoki o'lcham bo'yicha qidirish...">
+            </div>
+
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            {% for product in products %}
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">{{ product.name }}</div>
+                    </div>
+
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Rang</span>
+                            <span class="detail-value">{{ product.color }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">O'lcham</span>
+                            <span class="detail-value">{{ product.size }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Brend</span>
+                            <span class="detail-value">{{ product.brand }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Artikul</span>
+                            <span class="detail-value">{{ product.article }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Material</span>
+                            <span class="detail-value">{{ product.material }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Ishlab chiqaruvchi</span>
+                            <span class="detail-value">{{ product.manufacture }}</span>
+                        </div>
+                    </div>
+
+                    <div class="product-footer">
+                        <div class="barcode">{{ product.barcode }}</div>
+                        <div class="footer-buttons">
+                            <a href="{% url 'product-update' product.id %}" class="view-btn">Ko'rish</a>
+                            <a href="{% url 'sticker-generate' product.id%}" class="view-btn">Sticker yasash</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-products">
+                    <h3>Hech qanday mahsulot topilmadi</h3>
+                    <p>Birinchi mahsulotingizni qo'shish uchun yuqoridagi tugmani bosing</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+    // mavjud funksiyalar (saqlab qolindi)
+    function addProduct() {
+        window.location.href = "/add-product/";
+    }
+
+    function logout() {
+        if (confirm("Haqiqatan ham chiqmoqchimisiz?")) {
+            window.location.href = "/logout/";
+        }
+    }
+
+    // ---------- Qidiruv va filtr funksionalligi ----------
+    // Debounce yordamida juda tez kirishlarni kamaytiramiz
+    function debounce(fn, delay) {
+        let t;
+        return function(...args) {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    // Helper: detail-item ichidan label matniga ko'ra value oladi
+    function getDetailValue(card, labelTextUz) {
+        const detailItems = card.querySelectorAll('.detail-item');
+        for (const di of detailItems) {
+            const lblEl = di.querySelector('.detail-label');
+            const valEl = di.querySelector('.detail-value');
+            if (!lblEl || !valEl) continue;
+            const lbl = lblEl.innerText.trim().toLowerCase();
+            if (lbl === labelTextUz.toLowerCase()) {
+                return valEl.innerText.trim();
+            }
+        }
+        return '';
+    }
+
+    // Asosiy filter funktsiyasi
+    function filterProducts() {
+        const searchInput = document.getElementById('searchInput');
+        const brandFilter = document.getElementById('brandFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        if (!searchInput) return;
+
+        const q = searchInput.value.trim().toLowerCase();
+        const selectedBrand = brandFilter ? brandFilter.value.trim().toLowerCase() : '';
+        const selectedType = typeFilter ? typeFilter.value.trim().toLowerCase() : '';
+
+        const productsGrid = document.getElementById('productsGrid');
+        if (!productsGrid) return;
+        const cards = productsGrid.querySelectorAll('.product-card');
+
+        let visibleCount = 0;
+        cards.forEach(card => {
+            const nameEl = card.querySelector('.product-name');
+            const typeEl = card.querySelector('.product-type');
+
+            const name = nameEl ? nameEl.innerText.trim().toLowerCase() : '';
+            const article = getDetailValue(card, 'Artikul').toLowerCase();
+            const size = getDetailValue(card, "O'lcham").toLowerCase();
+            const brand = getDetailValue(card, 'Brend').toLowerCase();
+            const typeText = typeEl ? typeEl.innerText.trim().toLowerCase() : '';
+
+            // qidiruv: name, article yoki size orqali
+            const matchesQuery = q === '' || name.includes(q) || article.includes(q) || size.includes(q);
+
+            // brand filter: agar tanlangan bo'lsa mos kelishi kerak
+            const matchesBrand = selectedBrand === '' || (brand === selectedBrand);
+
+            // type filter: product-type bilan solishtiramiz
+            const matchesType = selectedType === '' || (typeText === selectedType.toLowerCase());
+
+            if (matchesQuery && matchesBrand && matchesType) {
+                card.style.display = ''; // ko'rsat
+                visibleCount += 1;
+            } else {
+                card.style.display = 'none'; // yashir
+            }
+        });
+
+        // Agar hamma mahsulot yashirilsa, "no-products" blokini ko'rsatish/yo'q qilish mumkin
+        const noProductsBlock = document.querySelector('.no-products');
+        if (noProductsBlock) {
+            if (visibleCount === 0) {
+                noProductsBlock.style.display = 'block';
+            } else {
+                noProductsBlock.style.display = 'none';
+            }
+        }
+
+        // Yangilanish: jami mahsulot sonini yangilash (agar xohlasangiz)
+        const statNumber = document.querySelector('.stat-card .stat-number');
+        if (statNumber) {
+            statNumber.innerText = visibleCount;
+        }
+    }
+
+    // DOM tayyor bo'lganda eventlarni ulaymiz
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const brandFilter = document.getElementById('brandFilter');
+        const typeFilter = document.getElementById('typeFilter');
+
+        if (searchInput) {
+            // tez yozishda ishlash uchun debounced versiya
+            searchInput.addEventListener('input', debounce(filterProducts, 150));
+        }
+        if (brandFilter) {
+            brandFilter.addEventListener('change', filterProducts);
+        }
+        if (typeFilter) {
+            typeFilter.addEventListener('change', filterProducts);
+        }
+
+        // Birinchi yuklanishda filterni ishga tushuramiz (barcha mahsulotlar ko'rinsin)
+        filterProducts();
+    });
+</script>
+
+    <script>
+        function addProduct() {
+            window.location.href = "/add-product/";
+        }
+        function goBack() {
+            window.location.href = "{% url 'dashboard' %}";
+        }
+
+    </script>
+</body>
+</html>
