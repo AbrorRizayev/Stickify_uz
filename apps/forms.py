@@ -1,14 +1,17 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.forms import Form, EmailField, CharField, PasswordInput, ModelForm, TextInput
+from django import forms
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.forms import (CharField, EmailField, Form, ModelForm,
+                          PasswordInput, TextInput)
 from jsonschema import ValidationError
 
-from .models import User, Product, Category
+from .models import Category, Product, User
 
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("email", "fullname", "phone_number")
+
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
@@ -21,11 +24,11 @@ class LoginForm(Form):
     password = CharField(label="Password", widget=PasswordInput)
 
 
-
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ["name", "color", "size", "brand", "material", "article", "manufacture", "region", "city", "street_and_home","barcode"]
+        fields = ["name", "color", "size", "brand", "material", "article", "manufacture",
+                  "region", "city", "street_and_home", "barcode"]
         widgets = {
             "barcode": TextInput(attrs={"style": "font-family: 'Courier New', monospace;"}),
         }
@@ -52,9 +55,6 @@ class ProductForm(ModelForm):
         return cleaned_data
 
 
-
-
-
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
@@ -69,4 +69,3 @@ class CategoryForm(ModelForm):
         if self.user and Category.objects.filter(user=self.user, name=name).exists():
             raise ValidationError("Bu nomdagi kategoriya allaqachon mavjud!")
         return name
-

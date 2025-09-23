@@ -1,13 +1,13 @@
-from datetime import datetime
-import treepoem
 import io
-from PIL import Image
+from datetime import datetime
+
 import barcode
+import treepoem
 from barcode.writer import ImageWriter
+from PIL import Image
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
-
-from reportlab.lib.styles import getSampleStyleSheet
 
 
 def generate_datamatrix_image(code: str) -> io.BytesIO:
@@ -210,11 +210,6 @@ def generate_sticker_100x50(c, product, gs1_code, idx, barcode_img, width, heigh
     c.setFont("DejaVuSans", 6)
     c.drawString(6 *mm , 15*mm, f"ИЗГОТОВИТЕЛЬ: {product.manufacture} {product.region}")
     c.drawString(6 * mm , 12*mm,  f"{product.city} {product.street_and_home}")
-
-    # p = Paragraph(text, style)
-    # p.wrapOn(c, 65 * mm, 15 * mm)  # max width, height for wrapping
-    # p.drawOn(c, 6 * mm, 12 * mm)  # position
-
     # === DataMatrix (right side, center) ===
     dm_x, dm_y = width - 30 * mm, height - 42 * mm
     dm_w, dm_h = 24 * mm, 24 * mm

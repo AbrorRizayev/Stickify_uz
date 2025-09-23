@@ -5,11 +5,10 @@ services:
       - .env
     ports:
       - "8001:8001"
-    command:  sh -c "uv run python3 manage.py migrate && uv run python3 manage.py runserver 0.0.0.0:8001"
+    command:
       uv run python3 manage.py runserver 0.0.0.0:8001
     depends_on:
       - postgres_service
-
 
   postgres_service:
     image: postgres:alpine

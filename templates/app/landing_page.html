@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stickerify – Wildberries Stickers</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      padding: 20px 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      background: #fff;
+      color: #2575fc;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background: #2575fc;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 80px 10%;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 30px auto;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #2575fc;
+      padding: 12px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s ease;
+    }
+
+    .cta-btn:hover {
+      background: #2575fc;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Info Section */
+    .info {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 50px 10%;
+      text-align: center;
+      border-radius: 20px;
+      margin: 50px 10%;
+    }
+
+    .info h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+    }
+
+    .info p {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.2);
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 2rem;
+      }
+      .navbar h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h1>Stickify</h1>
+    <a href="/login">Login</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>Wildberries mahsulotlari uchun stikerlar yarating</h2>
+    <p>
+      Ushbu platforma sotuvchilarga <strong>Wildberries</strong> yaratishda yordam berish uchun yaratilgan
+      yuqori sifatli mahsulot stikerlari tez va oson. Vaqtni tejang va oling
+      bir necha marta bosish orqali chop etishga tayyor stikerlar.
+    </p>
+    <a href="/login" class="cta-btn">Boshlash</a>
+  </section>
+
+  <!-- Info Section -->
+  <section class="info">
+    <h3>Nega bizni tanlaysiz?</h3>
+    <p>✨ Oddiy, zamonaviy va oqlangan — tezlik va samaradorlikni qadrlaydigan sotuvchilar uchun yaratilgan.</p>
+    <p>🚀 Endi qiyinchilik yo‘q – mahsulotingiz stikerlarini darhol oling.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Admin bilan bog'lanish: <a href="https://t.me/wbuzk" target="_blank">@wbuzk</a></p>
+    <p>Website developer bilan bog'lanish: <a href="https://t.me/abrzyv" target="_blank">@abrzyv</a></p>
+  </footer>
+</body>
+</html>

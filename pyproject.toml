@@ -22,3 +22,9 @@ dependencies = [
     "treepoem>=3.27.1",
     "wget>=3.2",
 ]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.3.0",
+    "isort>=6.0.1",
+]

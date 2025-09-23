@@ -4,6 +4,7 @@ from django.utils import timezone
 
 EXEMPT_PATHS = ("/expired/", "/login/", "/logout/")
 
+
 class SubscriptionCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -23,5 +24,4 @@ class SubscriptionCheckMiddleware:
                 path = request.path
                 if not any(path.startswith(p) for p in EXEMPT_PATHS):
                     return redirect("subscription_expired")
-
         return self.get_response(request)

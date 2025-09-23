@@ -1,10 +1,12 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+
 from apps.models import User
 
 
 class Command(BaseCommand):
     help = "Deactivate users whose subscription expired"
+
     def handle(self, *args, **kwargs):
         now = timezone.now()
         expired_users = User.objects.filter(

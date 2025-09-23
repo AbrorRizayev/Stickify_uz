@@ -1,12 +1,12 @@
 import uuid
-
-from django.db.models import Model, FileField, ForeignKey, CASCADE, TextChoices, UUIDField
 from datetime import timedelta
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField, DateTimeField
+from django.db.models import (CASCADE, CharField, DateTimeField, EmailField,
+                              ForeignKey, Model, TextChoices, UUIDField)
 from django.utils import timezone
+
 from root.settings import AUTH_USER_MODEL
 
 
@@ -29,18 +29,15 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-
 class User(AbstractUser):
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = EmailField(max_length=255, unique=True)
     fullname = CharField(max_length=255)
     phone_number = CharField(max_length=15, unique=True, null=True, blank=True)
     username = None
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = UserManager()
-
     subscription_end = DateTimeField(null=True, blank=True)
 
     def activate_subscription(self, period: str = "1m"):
@@ -58,12 +55,10 @@ class User(AbstractUser):
             delta = timedelta(days=365)
         else:
             raise ValueError("Invalid subscription period")
-
         if self.subscription_end and self.subscription_end > now:
             self.subscription_end += delta
         else:
             self.subscription_end = now + delta
-
         self.is_active = True
         self.save()
 
@@ -86,13 +81,11 @@ class Category(Model):
         return self.name
 
 
-
 class Product(Model):
     class StickerType(TextChoices):
         SMALL = '58X40mm', "58X40mm"
         MEDIUM = '70X40mm', "70X40mm"
         LARGE = '100X50mm', "100X50mm"
-
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = ForeignKey(AUTH_USER_MODEL, CASCADE, related_name="products")
     category = ForeignKey(Category, CASCADE, related_name="products")
