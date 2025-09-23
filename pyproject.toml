@@ -6,12 +6,7 @@ requires-python = ">=3.13"
 dependencies = [
     "django>=5.2.5",
     "django-qrcode>=0.3",
-    "django-redis>=6.0.0",
-    "django-rest-swagger>=2.2.0",
     "django-widget-tweaks>=1.5.0",
-    "djangorestframework-simplejwt[crypto]>=5.5.1",
-    "drf-spectacular>=0.28.0",
-    "drf-spectacular-sidecar>=2025.9.1",
     "load-dotenv>=0.1.0",
     "pillow>=11.3.0",
     "psycopg>=3.2.10",
