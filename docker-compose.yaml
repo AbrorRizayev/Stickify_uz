@@ -9,6 +9,7 @@ services:
       uv run python3 manage.py runserver 0.0.0.0:8001
     depends_on:
       - postgres_service
+    restart: always
 
   postgres_service:
     image: postgres:alpine
