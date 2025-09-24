@@ -79,7 +79,7 @@ class LoginView(View):
 
 def logout_user(request):
     logout(request)
-    return redirect('login')
+    return redirect('login_page')
 
 
 class DashboardView(LoginRequiredMixin, ListView):
