@@ -98,7 +98,7 @@
             <div style="color:red; margin-bottom:15px;">{{ form.errors }}</div>
         {% endif %}
 
-        <form method="post">
+        <form method="post" action="{% url 'login_page' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_email">📧 Email manzil</label>

@@ -12,9 +12,16 @@ SECRET_KEY = 'django-insecure-*xem9d3&b!_6d6&s-xiaxgw1=#xpj6sul5xecs8^*msb(sohpp
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-INSTALLED_APPS = [
-    'django.contrib.admin',
+ALLOWED_HOSTS = ["stickify.uz", "www.stickify.uz", "localhost", "127.0.0.1"]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://stickify.uz",
+    "https://stickify.uz",
+    "http://www.stickify.uz",
+    "http://localhost:8000",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "https://www.stickify.uz",
 ]
 
 INSTALLED_APPS = [
