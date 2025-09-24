@@ -22,5 +22,16 @@ services:
     ports:
       - "5434:5432"
 
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - static_volume:/static
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend_service
+
 volumes:
   static_volume:
