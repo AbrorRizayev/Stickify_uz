@@ -10,7 +10,7 @@ from apps.views import (AddCategoryView, AddProductView, CategoryDeleteView,
 urlpatterns = [
 #     ================== -- Login  ===============
     path("", landing_view, name="landing"),
-    path("login/", LoginView.as_view(), name="login"),
+    path("login/", LoginView.as_view(), name="login_page"),
     path("logout/", logout_user, name="logout"),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("expired/", SubscriptionExpiredView.as_view(), name="subscription_expired"),
