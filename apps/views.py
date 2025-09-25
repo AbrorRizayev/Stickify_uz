@@ -15,8 +15,6 @@ from django.views.decorators.http import require_GET
 from django.views.generic import DeleteView, DetailView, ListView, UpdateView
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import CreateAPIView, get_object_or_404
@@ -26,13 +24,6 @@ from .models import Category, Product
 from .serializers import ProductSerializer
 from .utils import (generate_code128_png_bytes, generate_sticker_58x40,
                     generate_sticker_70x40, generate_sticker_100x50)
-
-pdfmetrics.registerFont(
-    TTFont("DejaVuSans", "/usr/share/fonts/dejavu/DejaVuSans.ttf")
-)
-pdfmetrics.registerFont(
-    TTFont("DejaVuSans-Bold", "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf")
-)
 
 
 def landing_view(request):
@@ -66,7 +57,7 @@ class LoginView(View):
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             user = authenticate(request, username=email, password=password)
-            if  user:
+            if user:
                 if not user.check_subscription():
                     print(f"{request.user} eskirgan user")
                     return redirect("subscription_expired")
@@ -170,9 +161,9 @@ class AddProductView(LoginRequiredMixin, View):
         form = ProductForm()
         category = get_object_or_404(Category, id=pk, user=request.user)
         return render(request,
-            self.template_name,
-            {"form": form, "category_id": pk, "category": category},
-        )
+                      self.template_name,
+                      {"form": form, "category_id": pk, "category": category},
+                      )
 
     def post(self, request, pk):
         form = ProductForm(request.POST)
@@ -231,6 +222,7 @@ class ProductDeleteView(DeleteView):
 class GenerateStickersFromCSVView(LoginRequiredMixin, View):
 
     def post(self, request, id, sticker_type, *args, **kwargs):
+
         uploaded_csv = request.FILES.get("csv_file")
         if not uploaded_csv:
             return JsonResponse({"error": "CSV file is required"}, status=400)

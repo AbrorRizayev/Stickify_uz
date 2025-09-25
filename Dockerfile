@@ -10,4 +10,4 @@ RUN apk add --no-cache \
 
 RUN uv sync
 
-CMD ["sh", "-c", "uv run python3 manage.py migrate && uv run python3 manage.py runserver 0:8001"]
+CMD ["sh", "-c", "uv run python3 manage.py migrate && uv run gunicorn root.wsgi:application --bind 0.0.0.0:8001 --workers 13 --timeout 300"]

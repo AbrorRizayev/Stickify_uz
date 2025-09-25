@@ -3,11 +3,20 @@ from datetime import datetime
 
 import barcode
 import treepoem
-from barcode.writer import ImageWriter
 from PIL import Image
+from barcode.writer import ImageWriter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+pdfmetrics.registerFont(
+    TTFont("DejaVuSans", "apps/static/dejavu/DejaVuSans.ttf")
+)
+pdfmetrics.registerFont(
+    TTFont("DejaVuSans-Bold", "apps/static/dejavu/DejaVuSans-Bold.ttf")
+)
 
 
 def generate_datamatrix_image(code: str) -> io.BytesIO:
@@ -208,8 +217,8 @@ def generate_sticker_100x50(c, product, gs1_code, idx, barcode_img, width, heigh
 
     # === Manufacturer info (left side, bottom) ===
     c.setFont("DejaVuSans", 6)
-    c.drawString(6 *mm , 15*mm, f"ИЗГОТОВИТЕЛЬ: {product.manufacture} {product.region}")
-    c.drawString(6 * mm , 12*mm,  f"{product.city} {product.street_and_home}")
+    c.drawString(6 * mm, 15 * mm, f"ИЗГОТОВИТЕЛЬ: {product.manufacture} {product.region}")
+    c.drawString(6 * mm, 12 * mm, f"{product.city} {product.street_and_home}")
     # === DataMatrix (right side, center) ===
     dm_x, dm_y = width - 30 * mm, height - 42 * mm
     dm_w, dm_h = 24 * mm, 24 * mm
