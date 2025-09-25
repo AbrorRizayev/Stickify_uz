@@ -38,7 +38,6 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-    entrypoint: /bin/sh
 
 volumes:
   static_volume:
