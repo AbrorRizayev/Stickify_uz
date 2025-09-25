@@ -70,7 +70,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'stickify_db',
         'HOST': 'postgres_service',
-        'PORT': '5434',
+        'PORT': '5432',
         "USER": 'postgres',
         "PASSWORD": '1'
     }
