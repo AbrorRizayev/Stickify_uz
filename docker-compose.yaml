@@ -33,6 +33,12 @@ services:
     depends_on:
       - backend_service
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    entrypoint: /bin/sh
 
 volumes:
   static_volume:
