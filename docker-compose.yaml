@@ -25,13 +25,26 @@ services:
     volumes:
       - static_volume:/static
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     ports:
       - "80:80"
-      - "8001:8001"
       - "443:443"
     depends_on:
       - backend_service
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    entrypoint: >
+      sh -c "certbot certonly --webroot --webroot-path=/var/lib/letsencrypt
+      --email youremail@example.com --agree-tos --no-eff-email
+      -d stickify.uz -d www.stickify.uz"
+
 volumes:
   static_volume:
   pg_data:
+  certbot-etc:
+  certbot-var:
