@@ -86,9 +86,9 @@ server {
     }
 
     location / {
-        proxy_read_timeout 300;
-        proxy_connect_timeout 300;
-        proxy_send_timeout 300;
+        proxy_read_timeout 2000;
+        proxy_connect_timeout 2000;
+        proxy_send_timeout 2000;
         proxy_pass http://backend_service:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -96,3 +96,27 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+
+
+
+[Unit]
+Description=Gunicorn + Django (uv) service
+After=network.target
+
+[Service]
+WorkingDirectory=/var/www/Stickify_uz
+
+ExecStart=/usr/bin/uv run gunicorn root.wsgi:application \
+    --bind 0.0.0.0:8001 \
+    --workers 4 \
+    --timeout 2000
+
+Restart=always
+RestartSec=5
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=django-gunicorn
+
+[Install]
+WantedBy=multi-user.target

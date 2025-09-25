@@ -21,9 +21,15 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .sticker-container {
@@ -55,8 +61,12 @@
         }
 
         @keyframes textGlow {
-            from { filter: hue-rotate(0deg); }
-            to { filter: hue-rotate(90deg); }
+            from {
+                filter: hue-rotate(0deg);
+            }
+            to {
+                filter: hue-rotate(90deg);
+            }
         }
 
         .header-title p {
@@ -355,124 +365,125 @@
     </style>
 </head>
 <body>
-    <button class="back-btn" onclick="goBack()">← Orqaga qaytish</button>
+<button class="back-btn" onclick="goBack()">← Orqaga qaytish</button>
 
-    <div class="sticker-container">
-        <div class="sticker-header">
-            <div class="header-title">
-                <h1>Sticker Generator</h1>
-                <p>Osonlik bilan professional mahsulot stikerlarini yarating</p>
-            </div>
+<div class="sticker-container">
+    <div class="sticker-header">
+        <div class="header-title">
+            <h1>Sticker Generator</h1>
+            <p>Osonlik bilan professional mahsulot stikerlarini yarating</p>
         </div>
+    </div>
 
-        <div class="main-content">
-            <!-- Product Information Section -->
-            <div class="product-info-section">
-                <h2 class="section-title">Mahsulot malumotlari</h2>
-                <div class="product-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot nomi</span>
-                        <span class="detail-value" id="productName">{{ product.name }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot rangi</span>
-                        <span class="detail-value" id="productType">{{ product.color }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot Barcode</span>
-                        <span class="detail-value" id="productBarcode">{{ product.barcode }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot Bendi</span>
-                        <span class="detail-value" id="productPrice">{{ product.brand }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot Materiali</span>
-                        <span class="detail-value" id="productBrand">{{ product.material }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot artikli</span>
-                        <span class="detail-value" id="productSku">{{ product.article }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Mahsulot ishlab chiqaruvchi</span>
-                        <span class="detail-value" id="productSku">{{ product.manufacture}} {{ product.region }} {{ product.city }} {{ product.street_and_home }}</span>
-                    </div>
+    <div class="main-content">
+        <!-- Product Information Section -->
+        <div class="product-info-section">
+            <h2 class="section-title">Mahsulot malumotlari</h2>
+            <div class="product-details">
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot nomi</span>
+                    <span class="detail-value" id="productName">{{ product.name }}</span>
                 </div>
-            </div>
-
-            <!-- Sticker Controls Section -->
-            <div class="sticker-controls-section">
-                <h2 class="section-title">Sticker Configuration</h2>
-
-                <!-- Size Options -->
-                <div class="size-options">
-                    <h3 style="color: #333; margin-bottom: 15px;">Chiqadigan Sticker o'lchamini tanlang</h3>
-                    <div class="size-grid">
-                        <div class="size-option">
-                            <input type="radio" id="size58x40" name="stickerSize" value="58x40" checked>
-                            <label for="size58x40" class="size-label">
-                                <div>58×40mm</div>
-                                <small style="opacity: 0.7;">Standard</small>
-                            </label>
-                        </div>
-                        <div class="size-option">
-                            <input type="radio" id="size70x40" name="stickerSize" value="70x40">
-                            <label for="size70x40" class="size-label">
-                                <div>70×40mm</div>
-                                <small style="opacity: 0.7;">Medium</small>
-                            </label>
-                        </div>
-                        <div class="size-option">
-                            <input type="radio" id="size100x50" name="stickerSize" value="100x50">
-                            <label for="size100x50" class="size-label">
-                                <div>100×50mm</div>
-                                <small style="opacity: 0.7;">Large</small>
-                            </label>
-                        </div>
-                    </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot rangi</span>
+                    <span class="detail-value" id="productType">{{ product.color }}</span>
                 </div>
-
-                <!-- CSV Upload Section -->
-                <div class="csv-upload-section">
-                    <h3 style="color: #333; margin-bottom: 15px;">CSV File yuklang</h3>
-                    <div class="upload-area" onclick="document.getElementById('csvFile').click()">
-                        <div class="upload-icon">📄</div>
-                        <div class="upload-text">CSV faylingizni yuklash yoki sudrab olib tashlash uchun bosing</div>
-                        <button type="button" class="upload-btn">File Tanlash</button>
-                    </div>
-                    <input type="file" id="csvFile" class="file-input" accept=".csv" onchange="handleFileSelect(event)">
-                    <div class="file-info" id="fileInfo">
-                        <div class="file-name" id="fileName"></div>
-                        <div class="file-size" id="fileSize"></div>
-                    </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot Barcode</span>
+                    <span class="detail-value" id="productBarcode">{{ product.barcode }}</span>
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="generate-btn" id="generateBtn" onclick="generateSticker()" disabled>
-                        Sticker yasash
-                    </button>
-                    <button class="download-btn" id="downloadBtn" onclick="downloadSticker()" disabled>
-                        Yuklab olish
-                    </button>
-                    <button class="print-btn" id="printBtn" onclick="printSticker()" disabled>
-                        Print
-                    </button>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot Bendi</span>
+                    <span class="detail-value" id="productPrice">{{ product.brand }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot Materiali</span>
+                    <span class="detail-value" id="productBrand">{{ product.material }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot artikli</span>
+                    <span class="detail-value" id="productSku">{{ product.article }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Mahsulot ishlab chiqaruvchi</span>
+                    <span class="detail-value"
+                          id="productSku">{{ product.manufacture }} {{ product.region }} {{ product.city }} {{ product.street_and_home }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Sticker Preview Section -->
-        <div class="sticker-preview">
-            <h2 class="section-title">Sticker ko'rinishi</h2>
-            <div class="preview-area" id="previewArea">
-                <div class="preview-placeholder">Tayyor bo'lgan sticker shu yerda paydo boladi </div>
+        <!-- Sticker Controls Section -->
+        <div class="sticker-controls-section">
+            <h2 class="section-title">Sticker Configuration</h2>
+
+            <!-- Size Options -->
+            <div class="size-options">
+                <h3 style="color: #333; margin-bottom: 15px;">Chiqadigan Sticker o'lchamini tanlang</h3>
+                <div class="size-grid">
+                    <div class="size-option">
+                        <input type="radio" id="size58x40" name="stickerSize" value="58x40" checked>
+                        <label for="size58x40" class="size-label">
+                            <div>58×40mm</div>
+                            <small style="opacity: 0.7;">Standard</small>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size70x40" name="stickerSize" value="70x40">
+                        <label for="size70x40" class="size-label">
+                            <div>70×40mm</div>
+                            <small style="opacity: 0.7;">Medium</small>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size100x50" name="stickerSize" value="100x50">
+                        <label for="size100x50" class="size-label">
+                            <div>100×50mm</div>
+                            <small style="opacity: 0.7;">Large</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSV Upload Section -->
+            <div class="csv-upload-section">
+                <h3 style="color: #333; margin-bottom: 15px;">CSV File yuklang</h3>
+                <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">CSV faylingizni yuklash yoki sudrab olib tashlash uchun bosing</div>
+                    <button type="button" class="upload-btn">File Tanlash</button>
+                </div>
+                <input type="file" id="csvFile" class="file-input" accept=".csv" onchange="handleFileSelect(event)">
+                <div class="file-info" id="fileInfo">
+                    <div class="file-name" id="fileName"></div>
+                    <div class="file-size" id="fileSize"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="generate-btn" id="generateBtn" onclick="generateSticker()" disabled>
+                    Sticker yasash
+                </button>
+                <button class="download-btn" id="downloadBtn" onclick="downloadSticker()" disabled>
+                    Yuklab olish
+                </button>
+                <button class="print-btn" id="printBtn" onclick="printSticker()" disabled>
+                    Print
+                </button>
             </div>
         </div>
     </div>
 
-    <script>
+    <!-- Sticker Preview Section -->
+    <div class="sticker-preview">
+        <h2 class="section-title">Sticker ko'rinishi</h2>
+        <div class="preview-area" id="previewArea">
+            <div class="preview-placeholder">Tayyor bo'lgan sticker shu yerda paydo boladi</div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
     let uploadedFile = null;
     let generatedStickerBlob = null;
 
@@ -491,29 +502,10 @@
         }
         return cookieValue;
     }
+
     const csrftoken = getCookie('csrftoken');
 
-    // === Fetch with timeout helper ===
-    async function fetchWithTimeout(resource, options = {}) {
-        const { timeout = 200000 } = options; // default: 120s
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
 
-        try {
-            const response = await fetch(resource, {
-                ...options,
-                signal: controller.signal
-            });
-            return response;
-        } catch (error) {
-            if (error.name === "AbortError") {
-                throw new Error("Request timed out");
-            }
-            throw error;
-        } finally {
-            clearTimeout(id);
-        }
-    }
     // === Handle file selection ===
     function handleFileSelect(event) {
         const file = event.target.files[0];
@@ -563,20 +555,33 @@
             // Injected from Django template
             const productId = "{{ product.id }}";
 
-            const response = await fetchWithTimeout(`/products/${productId}/stickers/${stickerType}/`, {
+            const response = await fetch(`/products/${productId}/stickers/${stickerType}/`, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrftoken
                 },
                 body: formData,
-                credentials: "include"   // send session cookie
+                credentials: "include",   // send session cookie
+                signal: AbortSignal.timeout(1200000)
             });
-
             if (!response.ok) {
                 throw new Error("Failed to generate sticker PDF");
             }
-
             const blob = await response.blob();
+            {#const response = await axios.post(#}
+            {#    `/products/${productId}/stickers/${stickerType}/`,#}
+            {#    formData,#}
+            {#    {#}
+            {#        headers: {#}
+            {#            "X-CSRFToken": csrftoken#}
+            {#        },#}
+            {#        withCredentials: true,   // cookie yuboradi#}
+            {#        timeout: 3600000         // 1 soat timeout#}
+            {#    }#}
+            {#);#}
+            {##}
+            {#const blob = new Blob([response.data], {type: "application/pdf"});#}
+
             generatedStickerBlob = blob;
 
             document.getElementById('downloadBtn').disabled = false;

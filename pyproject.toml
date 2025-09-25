@@ -5,6 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
     "django>=5.2.5",
+    "django-cors-headers>=4.9.0",
     "django-qrcode>=0.3",
     "django-rest-swagger>=2.2.0",
     "django-widget-tweaks>=1.5.0",

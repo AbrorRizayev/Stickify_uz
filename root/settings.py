@@ -14,16 +14,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["stickify.uz", "www.stickify.uz", "localhost", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://stickify.uz",
-    "https://stickify.uz",
-    "http://www.stickify.uz",
-    "http://localhost:8000",
-    "http://localhost:8001",
-    "http://127.0.0.1:8001",
-    "https://www.stickify.uz",
-]
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,10 +26,12 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular_sidecar",
     "widget_tweaks",
+    "corsheaders",
     "apps",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # eng yuqoriga yaqin qo‘ying
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,12 +69,31 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'stickify_db',
-        'HOST': 'localhost',
+        'HOST': 'postgres_service',
         'PORT': '5434',
         "USER": 'postgres',
         "PASSWORD": '1'
     }
 }
+
+CORS_ALLOW_ALL_ORIGINS = True   # test uchun
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8001",  # sizning frontend domeningiz
+    "http://127.0.0.1:8001",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://stickify.uz",
+    "https://stickify.uz",
+    "http://www.stickify.uz",
+    "http://localhost:8000",
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "https://www.stickify.uz",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -114,11 +125,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = 'static/'
 STATIC_ROOT = join(BASE_DIR, 'static')
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = join(BASE_DIR, 'media')
 
