@@ -52,6 +52,11 @@ server {
     }
 
     location / {
+        return 301 https://$host$request_uri;
+    }
+
+
+    location / {
         proxy_read_timeout 300;
         proxy_connect_timeout 300;
         proxy_send_timeout 300;
@@ -82,6 +87,9 @@ server {
     }
 
     location / {
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_send_timeout 300;
         proxy_pass http://backend_service:8001;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
