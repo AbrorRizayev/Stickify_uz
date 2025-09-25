@@ -1,6 +1,5 @@
-docker compose run --rm certbot \
-  certonly --webroot \
-  -w /var/lib/letsencrypt \
+docker compose run --rm certbot certonly --webroot \
+  -w /var/www/certbot \
   -d stickify.uz -d www.stickify.uz \
   --email your@email.com --agree-tos --no-eff-email
 
