@@ -493,6 +493,27 @@
     }
     const csrftoken = getCookie('csrftoken');
 
+    // === Fetch with timeout helper ===
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 200000 } = options; // default: 120s
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const response = await fetch(resource, {
+                ...options,
+                signal: controller.signal
+            });
+            return response;
+        } catch (error) {
+            if (error.name === "AbortError") {
+                throw new Error("Request timed out");
+            }
+            throw error;
+        } finally {
+            clearTimeout(id);
+        }
+    }
     // === Handle file selection ===
     function handleFileSelect(event) {
         const file = event.target.files[0];
@@ -542,7 +563,7 @@
             // Injected from Django template
             const productId = "{{ product.id }}";
 
-            const response = await fetch(`/products/${productId}/stickers/${stickerType}/`, {
+            const response = await fetchWithTimeout(`/products/${productId}/stickers/${stickerType}/`, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": csrftoken
